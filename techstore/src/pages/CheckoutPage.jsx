@@ -80,23 +80,22 @@ function MomoPopup({ amount, orderId, onSuccess, onCancel }) {
               <div style={{ fontSize: 11, color: "#bbb", marginTop: 2 }}>Mã đơn: <span style={{ color: "#ae2070", fontWeight: 600 }}>{orderId}</span></div>
             </div>
 
-            {/* QR SVG */}
             <div style={{ display: "flex", justifyContent: "center", marginBottom: 14 }}>
-              <div style={{ background: "#fff", border: "3px solid #ae2070", borderRadius: 16, padding: 12, boxShadow: "0 4px 20px #ae207025" }}>
-                <svg width="160" height="160" viewBox="0 0 160 160">
-                  <rect width="160" height="160" fill="#fff"/>
-                  {/* 3 góc định vị */}
-                  <rect x="8" y="8" width="40" height="40" rx="4" fill="#1a0a2e"/><rect x="12" y="12" width="32" height="32" rx="2" fill="#fff"/><rect x="16" y="16" width="24" height="24" rx="2" fill="#1a0a2e"/>
-                  <rect x="112" y="8" width="40" height="40" rx="4" fill="#1a0a2e"/><rect x="116" y="12" width="32" height="32" rx="2" fill="#fff"/><rect x="120" y="16" width="24" height="24" rx="2" fill="#1a0a2e"/>
-                  <rect x="8" y="112" width="40" height="40" rx="4" fill="#1a0a2e"/><rect x="12" y="116" width="32" height="32" rx="2" fill="#fff"/><rect x="16" y="120" width="24" height="24" rx="2" fill="#1a0a2e"/>
-                  {/* Data dots */}
-                  {[[56,8],[64,8],[80,8],[96,8],[56,16],[72,16],[88,16],[104,16],[56,24],[80,24],[96,24],[56,32],[72,32],[56,40],[64,40],[80,40],[104,40],[8,56],[24,56],[40,56],[56,56],[72,56],[88,56],[104,56],[120,56],[144,56],[8,64],[32,64],[56,64],[80,64],[96,64],[120,64],[136,64],[8,72],[16,72],[40,72],[64,72],[88,72],[112,72],[128,72],[144,72],[8,80],[24,80],[48,80],[72,80],[96,80],[120,80],[144,80],[8,88],[32,88],[56,88],[80,88],[104,88],[128,88],[8,96],[16,96],[40,96],[64,96],[88,96],[112,96],[136,96],[56,104],[72,104],[96,104],[120,104],[144,104],[56,112],[80,112],[104,112],[128,112],[64,120],[88,120],[112,120],[136,120],[152,120],[56,128],[72,128],[96,128],[120,128],[144,128],[56,136],[80,136],[104,136],[128,136],[64,144],[88,144],[112,144],[136,144],[152,144]].map(([x,y],i)=>(
-                    <rect key={i} x={x} y={y} width="8" height="8" fill="#1a0a2e"/>
-                  ))}
-                  {/* Logo MoMo giữa QR */}
-                  <rect x="64" y="64" width="32" height="32" rx="6" fill="#ae2070"/>
-                  <text x="80" y="85" textAnchor="middle" fill="#fff" fontSize="15" fontWeight="800">M</text>
-                </svg>
+              <div style={{ 
+                background: "#fff", 
+                border: "3px solid #ae2070", 
+                borderRadius: 16, 
+                padding: 12, 
+                boxShadow: "0 4px 20px #ae207025",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center"
+              }}>
+                <img 
+                  src={`https://img.vietqr.io/image/momo-0923597174-compact.png?amount=${amount}&addInfo=${orderId}`} 
+                  alt="MoMo QR Code"
+                  style={{ width: 160, height: 160, borderRadius: 8 }}
+                />
               </div>
             </div>
 
@@ -189,6 +188,61 @@ function MomoPopup({ amount, orderId, onSuccess, onCancel }) {
 }
 
 // ============================================================
+// VNPAY POPUP
+// ============================================================
+function VNPayPopup({ amount, orderId, onSuccess, onCancel }) {
+  return (
+    <div style={{ position: "fixed", inset: 0, background: "#00000099", zIndex: 2000, display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(4px)" }}
+      onClick={e => { if (e.target === e.currentTarget) onCancel(); }}>
+      <div style={{ background: "#fff", borderRadius: 24, width: 360, overflow: "hidden", boxShadow: "0 32px 80px #00000080", fontFamily: "'Segoe UI', sans-serif", animation: "momoIn .25s ease" }}>
+        
+        {/* Header VNPay */}
+        <div style={{ background: "linear-gradient(135deg,#005baa,#0078d4)", padding: "16px 20px", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div style={{ background: "#fff", borderRadius: 12, width: 44, height: 44, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, fontWeight: 900, color: "#005baa" }}>VN</div>
+            <div>
+              <div style={{ color: "#fff", fontWeight: 800, fontSize: 17, letterSpacing: 0.5 }}>VNPAY-QR</div>
+              <div style={{ color: "#cce4f7", fontSize: 11 }}>Cổng thanh toán quốc gia</div>
+            </div>
+          </div>
+          <button onClick={onCancel} style={{ background: "#ffffff25", border: "none", color: "#fff", borderRadius: 10, width: 32, height: 32, cursor: "pointer", fontSize: 16 }}>✕</button>
+        </div>
+
+        <div style={{ padding: "20px 24px 24px" }}>
+          <div style={{ textAlign: "center", marginBottom: 16 }}>
+            <div style={{ fontSize: 12, color: "#999", marginBottom: 4 }}>Số tiền thanh toán</div>
+            <div style={{ fontSize: 30, fontWeight: 900, color: "#005baa" }}>{amount.toLocaleString("vi-VN")}đ</div>
+            <div style={{ fontSize: 11, color: "#bbb", marginTop: 2 }}>Mã đơn: <span style={{ color: "#005baa", fontWeight: 600 }}>{orderId}</span></div>
+          </div>
+
+          {/* QR Code động chuẩn VietQR cho VNPay */}
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: 16 }}>
+            <div style={{ background: "#fff", border: "3px solid #005baa", borderRadius: 16, padding: 12, boxShadow: "0 4px 20px #005baa25" }}>
+              <img 
+                src={`https://img.vietqr.io/image/vnpay-SỐ_TÀI_KHOẢN-compact.png?amount=${amount}&addInfo=${orderId}`} 
+                alt="VNPay QR"
+                style={{ width: 160, height: 160, display: "block" }}
+              />
+            </div>
+          </div>
+
+          <div style={{ background: "#f0f7ff", borderRadius: 12, padding: "12px 16px", marginBottom: 16, fontSize: 12, color: "#555", lineHeight: 1.8 }}>
+            <div style={{ fontWeight: 700, color: "#005baa", marginBottom: 2 }}>🏦 Hướng dẫn thanh toán:</div>
+            <div>1. Mở ứng dụng <b>Ngân hàng</b> hoặc <b>Ví VNPay</b></div>
+            <div>2. Chọn chức năng <b>Quét mã QR</b></div>
+            <div>3. Kiểm tra thông tin và xác nhận</div>
+          </div>
+
+          <button onClick={onSuccess} style={{ width: "100%", padding: 14, borderRadius: 12, border: "none", background: "linear-gradient(135deg,#005baa,#0078d4)", color: "#fff", cursor: "pointer", fontWeight: 800, fontSize: 15 }}>
+            Tôi đã hoàn tất thanh toán
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================
 // CHECKOUT PAGE
 // ============================================================
 export default function CheckoutPage({ setPage }) {
@@ -199,6 +253,7 @@ export default function CheckoutPage({ setPage }) {
   const [done,       setDone]       = useState(false);
   const [showMomo,   setShowMomo]   = useState(false);
   const [momoOrder,  setMomoOrder]  = useState(null);
+  const [showVNPay, setShowVNPay] = useState(false);
 
   const payStrategies  = { cod: new CODPayment(), momo: new MomoPayment(), credit: new CreditCardPayment(), vnpay: new VNPayPayment() };
   const discStrategies = { regular: new RegularDiscount(), vip: new VIPDiscount() };
@@ -215,6 +270,11 @@ export default function CheckoutPage({ setPage }) {
     if (payMethod === "momo") {
       setMomoOrder({ orderId, items: [...cart], total: finalTotal, address });
       setShowMomo(true);
+      return;
+    }
+    if (payMethod === "vnpay") {
+      setMomoOrder({ orderId, items: [...cart], total: finalTotal, address }); // Dùng chung state order
+      setShowVNPay(true);
       return;
     }
     const result = payStrategies[payMethod].pay(finalTotal);
@@ -248,7 +308,7 @@ export default function CheckoutPage({ setPage }) {
   return (
     <div style={{ maxWidth: 920, margin: "0 auto", padding: "32px 16px" }}>
       {showMomo && momoOrder && <MomoPopup amount={Math.round(finalTotal)} orderId={momoOrder.orderId} onSuccess={handleMomoSuccess} onCancel={() => setShowMomo(false)} />}
-
+      {showVNPay && momoOrder && <VNPayPopup amount={Math.round(finalTotal)} orderId={momoOrder.orderId} onSuccess={handlePaymentSuccess} onCancel={() => setShowVNPay(false)} />}
       {/* Header */}
       <div style={{ marginBottom: 28 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
